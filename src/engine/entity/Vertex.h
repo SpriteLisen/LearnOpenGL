@@ -8,7 +8,7 @@
 
 class Vertex {
 public:
-    Vertex(float x, float y, float z, float w=0.0f);
+    Vertex(float x, float y, float z, float w=1.0f);
     float getX();
     float getY();
     float getZ();

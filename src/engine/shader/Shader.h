@@ -8,6 +8,7 @@
 #include <map>
 #include "../entity/Vertex.h"
 #include "../entity/Color.h"
+#include "../entity/Mesh.h"
 
 class Shader {
 public:
@@ -17,10 +18,17 @@ public:
     Shader setUniformColor(const char *uniformName, Color color);
     Shader setUniformFloat(const char *uniformName, float value);
     Shader setUniformInt(const char *uniformName, int value);
+
+    Shader bindMesh(Mesh *m);
 private:
+    Mesh *mesh = nullptr;
+
     std::map<const char *, int> uniformCache;
     int getUniformIndex(const char *uniformName);
     void setUniform4f(const char *uniformName, float f1, float f2, float f3, float f4);
+
+    std::map<const char *, int> attribCache;
+    int getAttribIndex(const char *attribName);
 
     const char *vertexShaderSource;
     const char *fragmentShaderSource;

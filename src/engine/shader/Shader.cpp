@@ -107,3 +107,39 @@ Shader Shader::setUniformInt(const char *uniformName, int value) {
     glUniform1i(uniformIndex, value);
     return *this;
 }
+
+
+int Shader::getAttribIndex(const char *attribName) {
+    auto result = this->attribCache.find(attribName);
+
+    int attribIndex = -1;
+    if (result != this->attribCache.end()) {
+        attribIndex = result->second;
+    } else {
+        attribIndex = glGetAttribLocation(this->programId, attribName);
+        if (attribIndex == -1) {
+            std::cout << "Not find attrib '" << attribName << "' in Shader" << std::endl;
+            throw std::runtime_error("Not find attrib in Shader!");
+        }
+        this->attribCache.insert(std::make_pair(attribName, attribIndex));
+    }
+
+    return attribIndex;
+}
+
+Shader Shader::bindMesh(Mesh *m) {
+    if (m == nullptr) {
+        throw std::runtime_error("The mesh must not be nullptr!");
+    }
+    this->mesh = m;
+    if (mesh->vertices == nullptr) {
+        throw std::runtime_error("The mesh must have vertices!");
+    }
+
+    mesh->bindToShader(
+            getAttribIndex(mesh->verticesAttribName),
+            mesh->colorsAttribName == nullptr ? -1 : getAttribIndex(mesh->colorsAttribName)
+    );
+
+    return *this;
+}

@@ -30,7 +30,7 @@ add_executable(
         src/engine/shader/Shader.cpp src/engine/shader/Shader.h
         src/shader/TriangleShader.cpp src/shader/TriangleShader.h
         src/engine/entity/Color.cpp src/engine/entity/Color.h
-)
+        src/engine/gpu/GPUBuffer.cpp src/engine/gpu/GPUBuffer.h)
 
 target_link_libraries(
         ${PROJECT_NAME}

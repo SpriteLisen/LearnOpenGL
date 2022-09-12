@@ -6,20 +6,35 @@
 #define LEARNOPENGL_MESH_H
 
 #include <vector>
+#include <iostream>
 #include "Vertex.h"
+#include "Color.h"
+#include "../gpu/GPUBuffer.h"
 #include "glad/glad.h"
 
 class Mesh {
 public:
-    void setVertices(std::vector<Vertex> data);
-    void useVertices();
+    Mesh() {
+        verticesId = -1;
+    };
+    std::vector<Vertex> *vertices = nullptr;
+    const char *verticesAttribName = nullptr;
+    void setVertices(std::vector<Vertex> *data, const char* attribName);
+    void bindToShader(int verticesIndex, int colorsIndex);
 
-    void setIndices(std::vector<unsigned int> data);
+    std::vector<Color> *colors = nullptr;
+    const char *colorsAttribName = nullptr;
+    void setColors(std::vector<Color> *data, const char* attribName);
+
+    std::vector<unsigned int> *indices = nullptr;
+    void setIndices(std::vector<unsigned int> *data);
+
+    void use();
 private:
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
+    GPUBuffer *verticesBuffer = nullptr;
+    GPUBuffer *colorsBuffer = nullptr;
     unsigned int verticesId;
-    unsigned int indicesId;
+    GPUBuffer *indicesBuffer = nullptr;
 };
 
 
