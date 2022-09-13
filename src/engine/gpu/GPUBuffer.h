@@ -20,6 +20,7 @@ public:
     GPUBuffer(const void *data, int dataSize, DataType dataType = STATIC, BufferType bufferType = ARRAY);
 
     void bind() const;
+    void unbind() const;
 
 private:
     GLenum arrayType;

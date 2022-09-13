@@ -9,14 +9,12 @@
 #include <iostream>
 #include "Vertex.h"
 #include "Color.h"
+#include "../gpu/GPUAction.h"
 #include "../gpu/GPUBuffer.h"
 #include "glad/glad.h"
 
 class Mesh {
 public:
-    Mesh() {
-        verticesId = -1;
-    };
     std::vector<Vertex> *vertices = nullptr;
     const char *verticesAttribName = nullptr;
     void setVertices(std::vector<Vertex> *data, const char* attribName);
@@ -31,9 +29,9 @@ public:
 
     void use();
 private:
+    GPUAction *action = nullptr;
     GPUBuffer *verticesBuffer = nullptr;
     GPUBuffer *colorsBuffer = nullptr;
-    unsigned int verticesId;
     GPUBuffer *indicesBuffer = nullptr;
 };
 

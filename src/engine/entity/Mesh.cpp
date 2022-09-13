@@ -29,9 +29,9 @@ void Mesh::bindToShader(int verticesIndex, int colorsIndex) {
         return;
     }
 
-    // Create VAO, save actions
-    glGenVertexArrays(1, &this->verticesId);
-    glBindVertexArray(this->verticesId);
+    // Create a gpu action save buffer use action
+    action = new GPUAction();
+    action->use();
 
     // use vertex buffer
     verticesBuffer->bind();
@@ -40,19 +40,18 @@ void Mesh::bindToShader(int verticesIndex, int colorsIndex) {
             verticesIndex, (int) vertices->size(), GL_FLOAT,
             GL_FALSE, 4 * sizeof(float), (void *) nullptr
     );
+    verticesBuffer->unbind();
 
     // have color, use color
     if (colorsBuffer != nullptr) {
         colorsBuffer->bind();
-
         glEnableVertexAttribArray(colorsIndex);
         glVertexAttribPointer(
                 colorsIndex, (int) colors->size(), GL_FLOAT,
                 GL_FALSE, 4 * sizeof(float), (void *) nullptr
         );
+        colorsBuffer->unbind();
     }
-
-    glBindBuffer(GL_ARRAY_BUFFER, GL_NONE);
 
     glBindVertexArray(GL_NONE);
 }
@@ -90,22 +89,23 @@ void Mesh::setIndices(std::vector<unsigned int> *data) {
 
 void Mesh::use() {
     // Must have vertices
-    if (this->verticesId == -1) {
+    if (this->action == nullptr) {
         return;
     }
-    glBindVertexArray(this->verticesId);
+    this->action->use();
 
     // 使用线框模式绘制图形, 默认为 GL_FILL
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     if (indicesBuffer != nullptr) {
-        // 有顶点索引时按照顶点索引进行绘制
+        // Have indices use indices draw
         indicesBuffer->bind();
         glDrawElements(GL_TRIANGLES, (int) indices->size(), GL_UNSIGNED_INT, nullptr);
+        indicesBuffer->unbind();
     } else {
-        // 无顶点索引时按照顶点数量进行绘制
+        // Not have indices use vertices count draw
         glDrawArrays(GL_TRIANGLES, 0, (int) vertices->size());
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER, GL_NONE);
+    this->action->unbind();
 }

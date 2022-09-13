@@ -49,3 +49,7 @@ void GPUBuffer::bind() const {
     glBindBuffer(arrayType, id);
 }
 
+void GPUBuffer::unbind() const {
+    glBindBuffer(arrayType, GL_NONE);
+}
+
