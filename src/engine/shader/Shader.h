@@ -6,12 +6,16 @@
 #define LEARNOPENGL_SHADER_H
 
 #include <map>
+#include <string>
+#include <fstream>
+#include <sstream>
 #include "../entity/Vertex.h"
 #include "../entity/Color.h"
 #include "../entity/Mesh.h"
 
 class Shader {
 public:
+    Shader(const std::string& vertexSourceFilePath, const std::string& fragmentSourceFilePath);
     Shader(const char *vertexShaderSource, const char *fragmentShaderSource);
     void use() const;
     Shader setUniformVertex(const char *uniformName, Vertex vertex);
@@ -21,6 +25,7 @@ public:
 
     Shader bindMesh(Mesh *m);
 private:
+    void init(const char *vShaderSource, const char *fShaderSource);
     Mesh *mesh = nullptr;
 
     std::map<const char *, int> uniformCache;

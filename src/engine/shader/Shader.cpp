@@ -6,9 +6,43 @@
 #include <iostream>
 #include "glad/glad.h"
 
+Shader::Shader(const std::string &vertexSourceFilePath, const std::string &fragmentSourceFilePath) {
+    std::string vertexCode;
+    std::string fragmentCode;
+    std::ifstream vertexShaderFile;
+    std::ifstream fragmentShaderFile;
+
+    // Ensure file can throw exceptions
+    vertexShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    fragmentShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+
+    try {
+        // Open files
+        vertexShaderFile.open(vertexSourceFilePath);
+        fragmentShaderFile.open(fragmentSourceFilePath);
+        std::stringstream vertexShaderStream, fragmentShaderStream;
+        // Save file content to buffer
+        vertexShaderStream << vertexShaderFile.rdbuf();
+        fragmentShaderStream << fragmentShaderFile.rdbuf();
+        // Close file processor
+        vertexShaderFile.close();
+        fragmentShaderFile.close();
+        // string to char* for init
+        init(vertexShaderStream.str().c_str(), fragmentShaderStream.str().c_str());
+
+    }
+    catch (std::ifstream::failure e) {
+        std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+    }
+}
+
 Shader::Shader(const char *vertexShaderSource, const char *fragmentShaderSource) {
-    this->vertexShaderSource = vertexShaderSource;
-    this->fragmentShaderSource = fragmentShaderSource;
+    init(vertexShaderSource, fragmentShaderSource);
+}
+
+void Shader::init(const char *vShaderSource, const char *fShaderSource) {
+    this->vertexShaderSource = vShaderSource;
+    this->fragmentShaderSource = fShaderSource;
     this->compileShader();
 }
 

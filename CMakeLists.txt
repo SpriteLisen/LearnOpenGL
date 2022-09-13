@@ -5,6 +5,10 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS} -framework OpenGL")
 
+# config install files
+SET(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR})
+install(DIRECTORY assets/ DESTINATION assets)
+
 # add glfw3
 find_package(glfw3 3.3 REQUIRED)
 
@@ -30,7 +34,9 @@ add_executable(
         src/engine/shader/Shader.cpp src/engine/shader/Shader.h
         src/shader/TriangleShader.cpp src/shader/TriangleShader.h
         src/engine/entity/Color.cpp src/engine/entity/Color.h
-        src/engine/gpu/GPUBuffer.cpp src/engine/gpu/GPUBuffer.h src/engine/gpu/GPUAction.cpp src/engine/gpu/GPUAction.h)
+        src/engine/gpu/GPUBuffer.cpp src/engine/gpu/GPUBuffer.h
+        src/engine/gpu/GPUAction.cpp src/engine/gpu/GPUAction.h
+)
 
 target_link_libraries(
         ${PROJECT_NAME}

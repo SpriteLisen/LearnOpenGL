@@ -5,13 +5,15 @@
 #ifndef LEARNOPENGL_TRIANGLESHADER_H
 #define LEARNOPENGL_TRIANGLESHADER_H
 
+#include <string>
 #include "../engine/shader/Shader.h"
 
 class TriangleShader : public Shader {
 public:
-    TriangleShader(const char *vertexShaderSource, const char *fragmentShaderSource);
     static Shader create();
-};
 
+private:
+    TriangleShader(const std::string &vertexSourceFilePath, const std::string &fragmentSourceFilePath);
+};
 
 #endif //LEARNOPENGL_TRIANGLESHADER_H
