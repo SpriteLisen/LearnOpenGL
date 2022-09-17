@@ -14,10 +14,10 @@ void Mesh::setVertices(std::vector<Vertex> *data, const char *attribName) {
     float array[this->vertices->size() * 4];
     for (int i = 0; i < this->vertices->size(); i++) {
         Vertex vertex = this->vertices->at(i);
-        array[i * 4 + 0] = vertex.getX();
-        array[i * 4 + 1] = vertex.getY();
-        array[i * 4 + 2] = vertex.getZ();
-        array[i * 4 + 3] = vertex.getW();
+        array[i * 4 + 0] = vertex.x();
+        array[i * 4 + 1] = vertex.y();
+        array[i * 4 + 2] = vertex.z();
+        array[i * 4 + 3] = vertex.w();
     }
     verticesBuffer = new GPUBuffer(array, (int) sizeof(array));
 
@@ -66,10 +66,10 @@ void Mesh::setColors(std::vector<Color> *data, const char *attribName) {
     float array[this->colors->size() * 4];
     for (int i = 0; i < this->colors->size(); i++) {
         Color color = this->colors->at(i);
-        array[i * 4 + 0] = color.getRed();
-        array[i * 4 + 1] = color.getGreen();
-        array[i * 4 + 2] = color.getBlue();
-        array[i * 4 + 3] = color.getAlpha();
+        array[i * 4 + 0] = color.r();
+        array[i * 4 + 1] = color.g();
+        array[i * 4 + 2] = color.b();
+        array[i * 4 + 3] = color.a();
     }
     colorsBuffer = new GPUBuffer(array, (int) sizeof(array));
 

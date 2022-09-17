@@ -29,13 +29,12 @@ add_executable(
         src/main.cpp
         src/glad.c
 
-        src/engine/entity/Vertex.cpp src/engine/entity/Vertex.h
+        src/engine/entity/Entity.h
+        src/engine/gpu/GPUBuffer.cpp src/engine/gpu/GPUBuffer.h
+        src/engine/gpu/GPUAction.cpp src/engine/gpu/GPUAction.h
         src/engine/entity/Mesh.cpp src/engine/entity/Mesh.h
         src/engine/shader/Shader.cpp src/engine/shader/Shader.h
         src/shader/TriangleShader.cpp src/shader/TriangleShader.h
-        src/engine/entity/Color.cpp src/engine/entity/Color.h
-        src/engine/gpu/GPUBuffer.cpp src/engine/gpu/GPUBuffer.h
-        src/engine/gpu/GPUAction.cpp src/engine/gpu/GPUAction.h
 )
 
 target_link_libraries(

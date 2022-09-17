@@ -9,8 +9,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include "../entity/Vertex.h"
-#include "../entity/Color.h"
+#include "../entity/Entity.h"
 #include "../entity/Mesh.h"
 
 class Shader {

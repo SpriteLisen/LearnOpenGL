@@ -94,12 +94,12 @@ void Shader::use() const {
 }
 
 Shader Shader::setUniformVertex(const char *uniformName, Vertex vertex) {
-    this->setUniform4f(uniformName, vertex.getX(), vertex.getY(), vertex.getZ(), vertex.getW());
+    this->setUniform4f(uniformName, vertex.x(), vertex.y(), vertex.z(), vertex.w());
     return *this;
 }
 
 Shader Shader::setUniformColor(const char *uniformName, Color color) {
-    this->setUniform4f(uniformName, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    this->setUniform4f(uniformName, color.r(), color.g(), color.b(), color.a());
     return *this;
 }
 

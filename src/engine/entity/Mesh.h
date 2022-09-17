@@ -7,8 +7,7 @@
 
 #include <vector>
 #include <iostream>
-#include "Vertex.h"
-#include "Color.h"
+#include "Entity.h"
 #include "../gpu/GPUAction.h"
 #include "../gpu/GPUBuffer.h"
 #include "glad/glad.h"
