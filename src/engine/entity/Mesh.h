@@ -17,7 +17,7 @@ public:
     std::vector<Vertex> *vertices = nullptr;
     const char *verticesAttribName = nullptr;
     void setVertices(std::vector<Vertex> *data, const char* attribName);
-    void bindToShader(int verticesIndex, int colorsIndex);
+    void bindToShader(int verticesIndex, int colorsIndex, int uvIndex);
 
     std::vector<Color> *colors = nullptr;
     const char *colorsAttribName = nullptr;
@@ -26,11 +26,16 @@ public:
     std::vector<unsigned int> *indices = nullptr;
     void setIndices(std::vector<unsigned int> *data);
 
+    std::vector<UV> *uvs = nullptr;
+    const char *uvsAttribName = nullptr;
+    void setTexCoords(std::vector<UV> *data, const char* attribName);
+
     void use();
 private:
     GPUAction *action = nullptr;
     GPUBuffer *verticesBuffer = nullptr;
     GPUBuffer *colorsBuffer = nullptr;
+    GPUBuffer *uvBuffer = nullptr;
     GPUBuffer *indicesBuffer = nullptr;
 };
 

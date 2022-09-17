@@ -1,3 +1,5 @@
+#define STB_IMAGE_IMPLEMENTATION
+
 #include <iostream>
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
@@ -21,7 +23,7 @@ void processInput(GLFWwindow *window) {
 
 void drawChangeColor(Shader shader, Mesh mesh);
 
-void onDraw(const Shader &shader, Mesh mesh);
+void onDraw(Shader shader, Mesh mesh);
 
 int main() {
     // Init GLFW and GL Version
@@ -58,9 +60,11 @@ int main() {
 
     // Prepare vertices
     std::vector<Vertex> vertices;
-    vertices.emplace_back(0.5f, -0.5f, 0.0f);
     vertices.emplace_back(-0.5f, -0.5f, 0.0f);
-    vertices.emplace_back(0.0f, 0.5f, 0.0f);
+    vertices.emplace_back(0.5f, -0.5f, 0.0f);
+//    vertices.emplace_back(0.0f, 0.5f, 0.0f);
+    vertices.emplace_back(-0.5f, 0.5f, 0.0f);
+    vertices.emplace_back(0.5f, 0.5f, 0.0f);
     mesh.setVertices(&vertices, "aPos");
 
     // Prepare colors
@@ -68,19 +72,35 @@ int main() {
     colors.emplace_back(1.0f, 0.0f, 0.0f);
     colors.emplace_back(0.0f, 1.0f, 0.0f);
     colors.emplace_back(0.0f, 0.0f, 1.0f);
+    colors.emplace_back(1.0f, 0.0f, 1.0f);
     mesh.setColors(&colors, "aColors");
+
+    // Prepare uvs
+    std::vector<UV> uvs;
+    uvs.emplace_back(0.0f, 0.0f);
+    uvs.emplace_back(1.0f, 0.0f);
+    // uvs.emplace_back(0.5f, 1.0f);
+    uvs.emplace_back(0.0f, 1.0f);
+    uvs.emplace_back(1.0f, 1.0f);
+    mesh.setTexCoords(&uvs, "aTexCoords");
 
     // Prepare indices
     std::vector<unsigned int> indices;
     indices.emplace_back(0);
     indices.emplace_back(1);
     indices.emplace_back(2);
+    indices.emplace_back(2);
+    indices.emplace_back(3);
+    indices.emplace_back(1);
     mesh.setIndices(&indices);
 
+    // Prepare textures
+    std::vector<Texture> textures;
+    textures.push_back(Texture::fromFile("assets/texture/Pikachu.jpeg", "tex1"));
+
     Shader triangleShader = TriangleShader::create()
-            .bindMesh(&mesh)
-    // .setUniformColor("uColor", Color(0.0f, 0.0f, 1.0f))
-    ;
+            .setTextures(&textures)
+            .bindMesh(&mesh);
 
     // while loop render window
     while (!glfwWindowShouldClose(window)) {
@@ -105,7 +125,7 @@ void drawChangeColor(Shader shader, Mesh mesh) {
     shader.setUniformVertex("uColor", Vertex(0.0f, greenValue, 0.0f, 1.0f));
 }
 
-void onDraw(const Shader &shader, Mesh mesh) {
+void onDraw(Shader shader, Mesh mesh) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 

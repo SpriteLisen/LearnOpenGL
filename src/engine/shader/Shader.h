@@ -16,11 +16,13 @@ class Shader {
 public:
     Shader(const std::string& vertexSourceFilePath, const std::string& fragmentSourceFilePath);
     Shader(const char *vertexShaderSource, const char *fragmentShaderSource);
-    void use() const;
+    void use();
     Shader setUniformVertex(const char *uniformName, Vertex vertex);
     Shader setUniformColor(const char *uniformName, Color color);
     Shader setUniformFloat(const char *uniformName, float value);
     Shader setUniformInt(const char *uniformName, int value);
+
+    Shader setTextures(std::vector<Texture> *textures);
 
     Shader bindMesh(Mesh *m);
 private:
@@ -38,6 +40,8 @@ private:
     const char *fragmentShaderSource;
     unsigned int programId{};
     void compileShader();
+
+    std::vector<Texture> *_textures = nullptr;
 };
 
 

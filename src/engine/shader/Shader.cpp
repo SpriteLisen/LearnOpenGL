@@ -32,7 +32,11 @@ Shader::Shader(const std::string &vertexSourceFilePath, const std::string &fragm
 
     }
     catch (std::ifstream::failure e) {
-        std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+        std::cout <<
+                  "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ"
+                  << " vertexPath: " << vertexSourceFilePath
+                  << " , fragmentPath: " << fragmentSourceFilePath
+                  << std::endl;
     }
 }
 
@@ -89,8 +93,16 @@ void Shader::compileShader() {
     glDeleteShader(fragmentShader);
 }
 
-void Shader::use() const {
+void Shader::use() {
     glUseProgram(this->programId);
+
+    // set texture to program
+    if (_textures != nullptr) {
+        for (Texture texture: *_textures) {
+            setUniformInt(texture.name(), (int) texture.id());
+            texture.use();
+        }
+    }
 }
 
 Shader Shader::setUniformVertex(const char *uniformName, Vertex vertex) {
@@ -172,8 +184,14 @@ Shader Shader::bindMesh(Mesh *m) {
 
     mesh->bindToShader(
             getAttribIndex(mesh->verticesAttribName),
-            mesh->colorsAttribName == nullptr ? -1 : getAttribIndex(mesh->colorsAttribName)
+            mesh->colorsAttribName == nullptr ? -1 : getAttribIndex(mesh->colorsAttribName),
+            mesh->uvsAttribName == nullptr ? -1 : getAttribIndex(mesh->uvsAttribName)
     );
 
+    return *this;
+}
+
+Shader Shader::setTextures(std::vector<Texture> *textures) {
+    _textures = textures;
     return *this;
 }

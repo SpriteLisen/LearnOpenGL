@@ -24,7 +24,7 @@ void Mesh::setVertices(std::vector<Vertex> *data, const char *attribName) {
     this->verticesAttribName = attribName;
 }
 
-void Mesh::bindToShader(int verticesIndex, int colorsIndex) {
+void Mesh::bindToShader(int verticesIndex, int colorsIndex, int uvIndex) {
     if (this->vertices == nullptr || this->verticesBuffer == nullptr) {
         return;
     }
@@ -51,6 +51,17 @@ void Mesh::bindToShader(int verticesIndex, int colorsIndex) {
                 GL_FALSE, 4 * sizeof(float), (void *) nullptr
         );
         colorsBuffer->unbind();
+    }
+
+    // have uv, use uv
+    if (uvBuffer != nullptr) {
+        uvBuffer->bind();
+        glEnableVertexAttribArray(uvIndex);
+        glVertexAttribPointer(
+                uvIndex, (int) uvs->size(), GL_FLOAT,
+                GL_FALSE, 2 * sizeof(float), (void *) nullptr
+        );
+        uvBuffer->unbind();
     }
 
     glBindVertexArray(GL_NONE);
@@ -85,6 +96,24 @@ void Mesh::setIndices(std::vector<unsigned int> *data) {
     }
 
     indicesBuffer = new GPUBuffer(array, (int) sizeof(array), STATIC, ELEMENT_ARRAY);
+}
+
+void Mesh::setTexCoords(std::vector<UV> *data, const char *attribName) {
+    if (data == nullptr || attribName == nullptr) {
+        throw std::runtime_error("The params must not be nullptr!");
+    }
+
+    this->uvs = data;
+
+    float array[this->uvs->size() * 2];
+    for (int i = 0; i < this->uvs->size(); i++) {
+        UV uv = this->uvs->at(i);
+        array[i * 2 + 0] = uv.s();
+        array[i * 2 + 1] = uv.t();
+    }
+    uvBuffer = new GPUBuffer(array, (int) sizeof(array));
+
+    this->uvsAttribName = attribName;
 }
 
 void Mesh::use() {

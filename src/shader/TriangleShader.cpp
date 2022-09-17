@@ -11,7 +11,7 @@ TriangleShader::TriangleShader(const std::string &vertexSourceFilePath, const st
 
 Shader TriangleShader::create() {
     return TriangleShader(
-            "assets/TriangleShader/TriangleShader.vert",
-            "assets/TriangleShader/TriangleShader.frag"
+            "assets/shader/TriangleShader/TriangleShader.vert",
+            "assets/shader/TriangleShader/TriangleShader.frag"
     );
 }
