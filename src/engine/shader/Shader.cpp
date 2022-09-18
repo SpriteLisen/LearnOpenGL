@@ -201,3 +201,13 @@ Shader Shader::setTextures(std::vector<Texture> *textures) {
     _textures = textures;
     return *this;
 }
+
+Shader Shader::enableDepthTest() {
+    glEnable(GL_DEPTH_TEST);
+    return *this;
+}
+
+Shader Shader::disableDepthTest() {
+    glDisable(GL_DEPTH_TEST);
+    return *this;
+}

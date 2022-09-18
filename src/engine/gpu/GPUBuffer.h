@@ -24,7 +24,7 @@ public:
 
 private:
     GLenum arrayType;
-    unsigned int id;
+    unsigned int id = -1;
 };
 
 

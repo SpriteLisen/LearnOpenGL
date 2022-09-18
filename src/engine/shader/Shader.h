@@ -28,6 +28,9 @@ public:
     Shader setTextures(std::vector<Texture> *textures);
 
     Shader bindMesh(Mesh *m);
+
+    Shader enableDepthTest();
+    Shader disableDepthTest();
 private:
     void init(const char *vShaderSource, const char *fShaderSource);
     Mesh *mesh = nullptr;

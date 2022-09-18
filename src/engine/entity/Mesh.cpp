@@ -37,7 +37,7 @@ void Mesh::bindToShader(int verticesIndex, int colorsIndex, int uvIndex) {
     verticesBuffer->bind();
     glEnableVertexAttribArray(verticesIndex);
     glVertexAttribPointer(
-            verticesIndex, (int) vertices->size(), GL_FLOAT,
+            verticesIndex, 4, GL_FLOAT,
             GL_FALSE, 4 * sizeof(float), (void *) nullptr
     );
     verticesBuffer->unbind();
@@ -47,7 +47,7 @@ void Mesh::bindToShader(int verticesIndex, int colorsIndex, int uvIndex) {
         colorsBuffer->bind();
         glEnableVertexAttribArray(colorsIndex);
         glVertexAttribPointer(
-                colorsIndex, (int) colors->size(), GL_FLOAT,
+                colorsIndex, 4, GL_FLOAT,
                 GL_FALSE, 4 * sizeof(float), (void *) nullptr
         );
         colorsBuffer->unbind();
@@ -58,13 +58,13 @@ void Mesh::bindToShader(int verticesIndex, int colorsIndex, int uvIndex) {
         uvBuffer->bind();
         glEnableVertexAttribArray(uvIndex);
         glVertexAttribPointer(
-                uvIndex, (int) uvs->size(), GL_FLOAT,
+                uvIndex, 2, GL_FLOAT,
                 GL_FALSE, 2 * sizeof(float), (void *) nullptr
         );
         uvBuffer->unbind();
     }
 
-    glBindVertexArray(GL_NONE);
+    action->unbind();
 }
 
 void Mesh::setColors(std::vector<Color> *data, const char *attribName) {

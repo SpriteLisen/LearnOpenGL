@@ -8,10 +8,6 @@ GPUBuffer::GPUBuffer(
         const void *data, int dataSize,
         DataType dataType, BufferType bufferType
 ) {
-    id = -1;
-    glGenBuffers(1, &id);
-    glBindBuffer(GL_ARRAY_BUFFER, id);
-
     // Init drawType
     GLenum drawType;
     switch (dataType) {
@@ -40,9 +36,12 @@ GPUBuffer::GPUBuffer(
 
     }
 
-    glBufferData(GL_ARRAY_BUFFER, dataSize, data, drawType);
+    glGenBuffers(1, &id);
+    glBindBuffer(arrayType, id);
 
-    glBindBuffer(GL_ARRAY_BUFFER, GL_NONE);
+    glBufferData(arrayType, dataSize, data, drawType);
+
+    glBindBuffer(arrayType, GL_NONE);
 }
 
 void GPUBuffer::bind() const {

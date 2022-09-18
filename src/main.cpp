@@ -5,8 +5,6 @@
 #include <GLFW/glfw3.h>
 #include "shader/TriangleShader.h"
 #include "engine/entity/Mesh.h"
-#include <cmath>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -24,7 +22,12 @@ void processInput(GLFWwindow *window) {
         glfwSetWindowShouldClose(window, true);
 }
 
-void drawChangeColor(Shader shader, Mesh mesh);
+struct Program {
+    Shader shader;
+    Mesh mesh;
+};
+
+Program prepare();
 
 void onDraw(Shader shader, Mesh mesh);
 
@@ -36,7 +39,6 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     /// macOS Only
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
 
     // Create a window
     GLFWwindow *window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, nullptr, nullptr);
@@ -58,53 +60,7 @@ int main() {
     // listener window resize
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-
-    Mesh mesh;
-
-    // Prepare vertices
-    std::vector<Vertex> vertices;
-    vertices.emplace_back(-0.5f, -0.5f, 0.0f);
-    vertices.emplace_back(0.5f, -0.5f, 0.0f);
-//    vertices.emplace_back(0.0f, 0.5f, 0.0f);
-    vertices.emplace_back(-0.5f, 0.5f, 0.0f);
-    vertices.emplace_back(0.5f, 0.5f, 0.0f);
-    mesh.setVertices(&vertices, "aPos");
-
-    // Prepare colors
-    std::vector<Color> colors;
-    colors.emplace_back(1.0f, 0.0f, 0.0f);
-    colors.emplace_back(0.0f, 1.0f, 0.0f);
-    colors.emplace_back(0.0f, 0.0f, 1.0f);
-    colors.emplace_back(1.0f, 0.0f, 1.0f);
-    mesh.setColors(&colors, "aColors");
-
-    // Prepare uvs
-    std::vector<UV> uvs;
-    uvs.emplace_back(0.0f, 0.0f);
-    uvs.emplace_back(1.0f, 0.0f);
-    // uvs.emplace_back(0.5f, 1.0f);
-    uvs.emplace_back(0.0f, 1.0f);
-    uvs.emplace_back(1.0f, 1.0f);
-    mesh.setTexCoords(&uvs, "aTexCoords");
-
-    // Prepare indices
-    std::vector<unsigned int> indices;
-    indices.emplace_back(0);
-    indices.emplace_back(1);
-    indices.emplace_back(2);
-    indices.emplace_back(2);
-    indices.emplace_back(3);
-    indices.emplace_back(1);
-    mesh.setIndices(&indices);
-
-    // Prepare textures
-    std::vector<Texture> textures;
-    textures.push_back(Texture::fromFile("assets/texture/wall.jpg", "tex1"));
-    textures.push_back(Texture::fromFile("assets/texture/smile.png", "tex2"));
-
-    Shader triangleShader = TriangleShader::create()
-            .setTextures(&textures)
-            .bindMesh(&mesh);
+    Program program = prepare();
 
     // while loop render window
     while (!glfwWindowShouldClose(window)) {
@@ -112,7 +68,7 @@ int main() {
         processInput(window);
 
         // Render actions
-        onDraw(triangleShader, mesh);
+        onDraw(program.shader, program.mesh);
 
         // SwapBuffers
         glfwSwapBuffers(window);
@@ -123,21 +79,165 @@ int main() {
     return 0;
 }
 
-void drawChangeColor(Shader shader, Mesh mesh) {
-    auto timeValue = (float) glfwGetTime();
-    float greenValue = sin(timeValue) / 2.0f + 0.5f;
-    shader.setUniformVertex("uColor", Vertex(0.0f, greenValue, 0.0f, 1.0f));
+Program prepare() {
+    Mesh *mesh = new Mesh();
+
+    // Prepare vertices
+    auto vertices = new std::vector<Vertex>();
+    /*vertices->emplace_back(-0.5f, -0.5f, 0.0f);
+    vertices->emplace_back(0.5f, -0.5f, 0.0f);
+    vertices->emplace_back(-0.5f, 0.5f, 0.0f);
+    vertices->emplace_back(0.5f, 0.5f, 0.0f);*/
+
+    vertices->emplace_back(-0.5f, -0.5f, -0.5f);
+    vertices->emplace_back(0.5f, -0.5f, -0.5f);
+    vertices->emplace_back(0.5f, 0.5f, -0.5f);
+    vertices->emplace_back(0.5f, 0.5f, -0.5f);
+    vertices->emplace_back(-0.5f, 0.5f, -0.5f);
+    vertices->emplace_back(-0.5f, -0.5f, -0.5f);
+
+    vertices->emplace_back(-0.5f, -0.5f, 0.5f);
+    vertices->emplace_back(0.5f, -0.5f, 0.5f);
+    vertices->emplace_back(0.5f, 0.5f, 0.5f);
+    vertices->emplace_back(0.5f, 0.5f, 0.5f);
+    vertices->emplace_back(-0.5f, 0.5f, 0.5f);
+    vertices->emplace_back(-0.5f, -0.5f, 0.5f);
+
+    vertices->emplace_back(-0.5f, 0.5f, 0.5f);
+    vertices->emplace_back(-0.5f, 0.5f, -0.5f);
+    vertices->emplace_back(-0.5f, -0.5f, -0.5f);
+    vertices->emplace_back(-0.5f, -0.5f, -0.5f);
+    vertices->emplace_back(-0.5f, -0.5f, 0.5f);
+    vertices->emplace_back(-0.5f, 0.5f, 0.5f);
+
+    vertices->emplace_back(0.5f, 0.5f, 0.5f);
+    vertices->emplace_back(0.5f, 0.5f, -0.5f);
+    vertices->emplace_back(0.5f, -0.5f, -0.5f);
+    vertices->emplace_back(0.5f, -0.5f, -0.5f);
+    vertices->emplace_back(0.5f, -0.5f, 0.5f);
+    vertices->emplace_back(0.5f, 0.5f, 0.5f);
+
+    vertices->emplace_back(-0.5f, -0.5f, -0.5f);
+    vertices->emplace_back(0.5f, -0.5f, -0.5f);
+    vertices->emplace_back(0.5f, -0.5f, 0.5f);
+    vertices->emplace_back(0.5f, -0.5f, 0.5f);
+    vertices->emplace_back(-0.5f, -0.5f, 0.5f);
+    vertices->emplace_back(-0.5f, -0.5f, -0.5f);
+
+    vertices->emplace_back(-0.5f, 0.5f, -0.5f);
+    vertices->emplace_back(0.5f, 0.5f, -0.5f);
+    vertices->emplace_back(0.5f, 0.5f, 0.5f);
+    vertices->emplace_back(0.5f, 0.5f, 0.5f);
+    vertices->emplace_back(-0.5f, 0.5f, 0.5f);
+    vertices->emplace_back(-0.5f, 0.5f, -0.5f);
+    mesh->setVertices(vertices, "aPos");
+
+    // Prepare colors
+    /*std::vector<Color> colors;
+    colors.emplace_back(1.0f, 0.0f, 0.0f);
+    colors.emplace_back(0.0f, 1.0f, 0.0f);
+    colors.emplace_back(0.0f, 0.0f, 1.0f);
+    colors.emplace_back(1.0f, 0.0f, 1.0f);
+    mesh.setColors(&colors, "aColors");*/
+
+    // Prepare uvs
+    auto uvs = new std::vector<UV>();
+    /*uvs->emplace_back(0.0f, 0.0f);
+    uvs->emplace_back(1.0f, 0.0f);
+    uvs->emplace_back(0.0f, 1.0f);
+    uvs->emplace_back(1.0f, 1.0f);*/
+
+    uvs->emplace_back(0.0f, 0.0f);
+    uvs->emplace_back(1.0f, 0.0f);
+    uvs->emplace_back(1.0f, 1.0f);
+    uvs->emplace_back(1.0f, 1.0f);
+    uvs->emplace_back(0.0f, 1.0f);
+    uvs->emplace_back(0.0f, 0.0f);
+
+    uvs->emplace_back(0.0f, 0.0f);
+    uvs->emplace_back(1.0f, 0.0f);
+    uvs->emplace_back(1.0f, 1.0f);
+    uvs->emplace_back(1.0f, 1.0f);
+    uvs->emplace_back(0.0f, 1.0f);
+    uvs->emplace_back(0.0f, 0.0f);
+
+    uvs->emplace_back(1.0f, 0.0f);
+    uvs->emplace_back(1.0f, 1.0f);
+    uvs->emplace_back(0.0f, 1.0f);
+    uvs->emplace_back(0.0f, 1.0f);
+    uvs->emplace_back(0.0f, 0.0f);
+    uvs->emplace_back(1.0f, 0.0f);
+
+    uvs->emplace_back(1.0f, 0.0f);
+    uvs->emplace_back(1.0f, 1.0f);
+    uvs->emplace_back(0.0f, 1.0f);
+    uvs->emplace_back(0.0f, 1.0f);
+    uvs->emplace_back(0.0f, 0.0f);
+    uvs->emplace_back(1.0f, 0.0f);
+
+    uvs->emplace_back(0.0f, 1.0f);
+    uvs->emplace_back(1.0f, 1.0f);
+    uvs->emplace_back(1.0f, 0.0f);
+    uvs->emplace_back(1.0f, 0.0f);
+    uvs->emplace_back(0.0f, 0.0f);
+    uvs->emplace_back(0.0f, 1.0f);
+
+    uvs->emplace_back(0.0f, 1.0f);
+    uvs->emplace_back(1.0f, 1.0f);
+    uvs->emplace_back(1.0f, 0.0f);
+    uvs->emplace_back(1.0f, 0.0f);
+    uvs->emplace_back(0.0f, 0.0f);
+    uvs->emplace_back(0.0f, 1.0f);
+    mesh->setTexCoords(uvs, "aTexCoords");
+
+    // Prepare indices
+    /*auto indices = new std::vector<unsigned int>();
+    indices->emplace_back(0);
+    indices->emplace_back(1);
+    indices->emplace_back(2);
+    indices->emplace_back(2);
+    indices->emplace_back(3);
+    indices->emplace_back(1);
+    mesh->setIndices(indices);*/
+
+    // Prepare textures
+    auto textures = new std::vector<Texture>();
+    textures->push_back(Texture::fromFile("assets/texture/wall.jpg", "tex1"));
+    textures->push_back(Texture::fromFile("assets/texture/smile.png", "tex2"));
+
+    Shader triangleShader = TriangleShader::create()
+            .setTextures(textures)
+            .enableDepthTest()
+            .bindMesh(mesh);
+
+    return {triangleShader, *mesh};
 }
 
 void onDraw(Shader shader, Mesh mesh) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glm::mat4 trans = glm::mat4(1.0);
-    trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-    shader.setMat4("matrix", trans);
+    glm::mat4 model(1.0f);
+    model = glm::rotate(
+            model, (float) glfwGetTime() * glm::radians(50.0f),
+            glm::vec3(0.5f, 1.0f, 0.0f)
+    );
+
+    glm::mat4 view(1.0f);
+    // 注意，我们将矩阵向我们要进行移动场景的反方向移动。
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+    glm::mat4 projection(1.0f);
+    projection = glm::perspective(
+            glm::radians(45.0f),
+            (float) WINDOW_WIDTH / (float) WINDOW_HEIGHT,
+            0.1f, 100.0f
+    );
+
+    glm::mat4 mat = projection * view * model;
+
+    shader.setMat4("matrix", mat);
 
     shader.use();
-    // drawChangeColor(shader, mesh);
     mesh.use();
 }
