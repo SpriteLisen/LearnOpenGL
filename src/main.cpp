@@ -96,7 +96,8 @@ int main() {
 
     // Prepare textures
     std::vector<Texture> textures;
-    textures.push_back(Texture::fromFile("assets/texture/Pikachu.jpeg", "tex1"));
+    textures.push_back(Texture::fromFile("assets/texture/wall.jpg", "tex1"));
+    textures.push_back(Texture::fromFile("assets/texture/smile.png", "tex2"));
 
     Shader triangleShader = TriangleShader::create()
             .setTextures(&textures)

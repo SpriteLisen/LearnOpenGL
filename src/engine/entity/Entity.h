@@ -14,19 +14,19 @@ public:
 
     }
 
-    float x() {
+    float x() const {
         return _x;
     }
 
-    float y() {
+    float y() const {
         return _y;
     }
 
-    float z() {
+    float z() const {
         return _z;
     }
 
-    float w() {
+    float w() const {
         return _w;
     }
 
@@ -40,19 +40,19 @@ public:
 
     }
 
-    float r() {
+    float r() const {
         return _r;
     }
 
-    float g() {
+    float g() const {
         return _g;
     }
 
-    float b() {
+    float b() const {
         return _b;
     }
 
-    float a() {
+    float a() const {
         return _a;
     }
 
@@ -66,11 +66,11 @@ public:
 
     }
 
-    float s() {
+    float s() const {
         return _s;
     }
 
-    float t() {
+    float t() const {
         return _t;
     }
 
@@ -103,9 +103,18 @@ public:
             TextureWrapType wrapType = REPEAT,
             TextureFilterType filterType = LINEAR
     ) {
-        int width, height, nrChannels;
+        int width, height, nrChannels, reqComp = STBI_default;
+
+        // if png file, need read alpha channel
+        std::string path = std::string(filePath);
+        if(path.substr(path.find_last_of('.') + 1) == "png") {
+            reqComp = STBI_rgb_alpha;
+        }
+
+        // vertically to gl st coordinate
         stbi_set_flip_vertically_on_load(true);
-        unsigned char *data = stbi_load(filePath, &width, &height, &nrChannels, 0);
+        unsigned char *data = stbi_load(filePath, &width, &height, &nrChannels, reqComp);
+
         return {name, data, width, height, nrChannels, type, wrapType, filterType};
     }
 
