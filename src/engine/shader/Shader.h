@@ -9,6 +9,8 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "../entity/Entity.h"
 #include "../entity/Mesh.h"
 
@@ -21,6 +23,7 @@ public:
     Shader setUniformColor(const char *uniformName, Color color);
     Shader setUniformFloat(const char *uniformName, float value);
     Shader setUniformInt(const char *uniformName, int value);
+    Shader setMat4(const char *uniformName, glm::mat4 value);
 
     Shader setTextures(std::vector<Texture> *textures);
 

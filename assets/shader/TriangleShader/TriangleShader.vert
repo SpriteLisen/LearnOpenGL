@@ -6,8 +6,10 @@ layout (location = 2) in vec2 aTexCoords;
 out vec4 fColors;
 out vec2 fTexCoords;
 
+uniform mat4 matrix;
+
 void main() {
     fColors = aColors;
     fTexCoords = aTexCoords;
-    gl_Position = aPos;
+    gl_Position = matrix * aPos;
 }

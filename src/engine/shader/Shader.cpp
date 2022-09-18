@@ -154,6 +154,12 @@ Shader Shader::setUniformInt(const char *uniformName, int value) {
     return *this;
 }
 
+Shader Shader::setMat4(const char *uniformName, glm::mat4 value) {
+    int uniformIndex = getUniformIndex(uniformName);
+    glUseProgram(this->programId);
+    glUniformMatrix4fv(uniformIndex, 1, GL_FALSE, glm::value_ptr(value));
+    return *this;
+}
 
 int Shader::getAttribIndex(const char *attribName) {
     auto result = this->attribCache.find(attribName);

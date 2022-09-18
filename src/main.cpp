@@ -7,6 +7,9 @@
 #include "engine/entity/Mesh.h"
 #include <cmath>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 int WINDOW_WIDTH = 800;
 int WINDOW_HEIGHT = 600;
 const char *WINDOW_TITLE = "LearnOpenGL";
@@ -129,6 +132,10 @@ void drawChangeColor(Shader shader, Mesh mesh) {
 void onDraw(Shader shader, Mesh mesh) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    glm::mat4 trans = glm::mat4(1.0);
+    trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+    shader.setMat4("matrix", trans);
 
     shader.use();
     // drawChangeColor(shader, mesh);
